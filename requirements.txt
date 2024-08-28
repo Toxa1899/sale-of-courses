@@ -1,0 +1,15 @@
+djangorestframework
+djangorestframework-simplejwt
+psycopg2-binary
+pillow
+drf-yasg
+python-decouple
+django-cors-headers
+redis
+celery
+django-filter
+djangorestframework-pagination
+beautifulsoup4
+lxml
+requests
+django-password-validators
