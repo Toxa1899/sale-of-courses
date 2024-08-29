@@ -147,9 +147,9 @@ class UpdateUserSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         if not attrs:
             raise serializers.ValidationError({"photo": "Please provide a photo",
-                                              "description": "Please provide a description.",
-                                              "link_to_portfolio": "Please provide a  portfolio",
-                                               "link_to_behance": "Please provide a behance",
+                                                "description": "Please provide a description.",
+                                                "link_to_portfolio": "Please provide a  portfolio",
+                                                "link_to_behance": "Please provide a behance",
                                                "link_to_instagram": "Please provide a instagram",
                                                "link_to_artstation": "Please provide a artstation",
                                                "first_name": "Please provide your first name",
