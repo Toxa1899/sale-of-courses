@@ -14,3 +14,5 @@ class ProductImageViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
     queryset = ProductCardImage.objects.all()
     serializer_class = ProductCardImageSerializer
+
+
