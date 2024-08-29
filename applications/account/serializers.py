@@ -43,10 +43,6 @@ class ActivateSerializer(serializers.Serializer):
         fields = ('activation_code',)
 
 
-class DeleteAccountSerializer(serializers.Serializer):
-    password = serializers.CharField(min_length=6, required=True, write_only=True)
-
-
 class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(required=True)
     new_password = serializers.CharField(required=True, min_length=6)
@@ -58,8 +54,6 @@ class ChangePasswordSerializer(serializers.Serializer):
         if not user.check_password(password):
             raise serializers.ValidationError('Пароль не совпадает с текущим')
         return user
-
-
 
     def validate(self, attrs):
         p1 = attrs.get('new_password')
@@ -134,10 +128,6 @@ class ForgotPasswordConfirmSerializer(serializers.Serializer):
         user.save(update_fields=['password', 'activation_code'])
 
 
-from rest_framework import serializers
-from django.contrib.auth import get_user_model
-
-User = get_user_model()
 
 class UpdateUserSerializer(serializers.ModelSerializer):
     photo = serializers.ImageField(required=False, help_text="Upload a new photo.")
