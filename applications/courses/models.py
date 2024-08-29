@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.utils import timezone
 
 from django.db import models
@@ -6,9 +7,10 @@ from applications.product_card.models import ProductCard
 
 
 # Create your models here.
-
+User = get_user_model()
 
 class Course(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     product_card = models.ForeignKey(ProductCard, on_delete=models.CASCADE, verbose_name="product_card")
     lesson_title = models.CharField(max_length=140)
     lesson_description = models.TextField()
