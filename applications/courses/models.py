@@ -9,7 +9,7 @@ from applications.product_card.models import ProductCard
 
 
 class Course(models.Model):
-    card = models.ForeignKey(ProductCard, on_delete=models.CASCADE)
+    product_card = models.ForeignKey(ProductCard, on_delete=models.CASCADE, verbose_name="product_card")
     lesson_title = models.CharField(max_length=140)
     lesson_description = models.TextField()
     video = models.FileField(upload_to='course/videos', null=True, blank=True)
