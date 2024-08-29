@@ -9,11 +9,11 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import RegisterSerializer, ChangePasswordSerializer, ForgotPasswordSerializer, \
-    ForgotPasswordConfirmSerializer, DeleteAccountSerializer, ActivateSerializer
+    ForgotPasswordConfirmSerializer, DeleteAccountSerializer, ActivateSerializer, UpdateUserSerializer
 from django.contrib.auth import get_user_model
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
-
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated, AllowAny
 
 User = get_user_model()
 
@@ -72,6 +72,10 @@ class ForgotPasswordConfirmAPIView(APIView):
 
 
 class UpdateUserAPIView(APIView):
-    def post(self, request):
-        # serializer = UpdateUserSerializers()
-        ...
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request):
+        serializer = UpdateUserSerializer(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        serializer.update(instance=request.user, validated_data=serializer.validated_data)
+        return Response('Успешно')

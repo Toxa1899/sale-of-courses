@@ -132,3 +132,44 @@ class ForgotPasswordConfirmSerializer(serializers.Serializer):
         user.set_password(password)
         user.activation_code = ''
         user.save(update_fields=['password', 'activation_code'])
+
+
+from rest_framework import serializers
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
+class UpdateUserSerializer(serializers.ModelSerializer):
+    photo = serializers.ImageField(required=False, help_text="Upload a new photo.")
+    description = serializers.CharField(required=False, help_text="Update your description.")
+    link_to_portfolio = serializers.URLField(required=False, help_text="Provide a link to your portfolio.")
+    link_to_behance = serializers.URLField(required=False, help_text="Provide a link to your Behance profile.")
+    link_to_instagram = serializers.URLField(required=False, help_text="Provide a link to your Instagram profile.")
+    link_to_artstation = serializers.URLField(required=False, help_text="Provide a link to your ArtStation profile.")
+    first_name = serializers.CharField(required=False, help_text="Provide a firstname")
+    last_name = serializers.CharField(required=False, help_text="Provide a lastname")
+
+    class Meta:
+        model = User
+        fields = ('photo', 'description', 'link_to_portfolio', 'link_to_behance',
+                  'link_to_instagram', 'link_to_artstation', 'first_name', 'last_name')
+
+    def validate(self, attrs):
+        if not attrs:
+            raise serializers.ValidationError({"photo": "Please provide a photo",
+                                              "description": "Please provide a description.",
+                                              "link_to_portfolio": "Please provide a  portfolio",
+                                               "link_to_behance": "Please provide a behance",
+                                               "link_to_instagram": "Please provide a instagram",
+                                               "link_to_artstation": "Please provide a artstation",
+                                               "first_name": "Please provide your first name",
+                                               "last_name": "Please provide your last name"})
+        return attrs
+
+    def update(self, instance, validated_data):
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        return instance
+
+

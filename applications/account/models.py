@@ -34,7 +34,7 @@ class CustomUserManager(UserManager):
 
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True, verbose_name="email")
-    photo = models.ImageField(upload_to="media/user", blank=True, null=True, verbose_name="photo")
+    photo = models.ImageField(upload_to="users/", blank=True, null=True, verbose_name="users")
     description = models.TextField(blank=True, null=True, verbose_name="description")
     link_to_portfolio = models.URLField(blank=True, null=True, verbose_name="link to portfolio")
     link_to_behance = models.URLField(blank=True, null=True, verbose_name="link to behance")
