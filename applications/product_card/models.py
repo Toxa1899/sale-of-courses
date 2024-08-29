@@ -1,9 +1,11 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 
 # Create your models here.
-
+User = get_user_model()
 
 class ProductCard(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     cap = models.ImageField(upload_to='product_card/')
     name = models.CharField(max_length=100)
     description = models.TextField()
@@ -11,5 +13,5 @@ class ProductCard(models.Model):
 
 
 class ProductCardImage(models.Model):
-    product = models.ForeignKey(ProductCard, related_name='images', on_delete=models.CASCADE)
+    product = models.ForeignKey(ProductCard, related_name='productcardimage_set', on_delete=models.CASCADE)
     authors_work = models.ImageField(upload_to='product_images/')

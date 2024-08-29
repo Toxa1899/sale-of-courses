@@ -71,11 +71,26 @@ class ForgotPasswordConfirmAPIView(APIView):
         return Response('Ваш пароль успешно обновлен', status=200)
 
 
+# class UpdateUserAPIView(APIView):
+#     permission_classes = [IsAuthenticated]
+#
+#     def patch(self, request, *args, **kwargs):
+#         serializer = UpdateUserSerializer(instance=request.user, data=request.data,  context={'request': request})
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()  # Здесь используется метод save() для сохранения изменений
+#         return Response('Успешно')
+
+
 class UpdateUserAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def put(self, request):
-        serializer = UpdateUserSerializer(data=request.data, context={'request': request})
+    def patch(self, request, *args, **kwargs):
+        serializer = UpdateUserSerializer(
+            instance=request.user,
+            data=request.data,
+            partial=True,
+            context={'request': request}
+        )
         serializer.is_valid(raise_exception=True)
-        serializer.update(instance=request.user, validated_data=serializer.validated_data)
-        return Response('Успешно')
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)

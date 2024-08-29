@@ -1,3 +1,11 @@
 from django.contrib import admin
+from .models import ProductCard, ProductCardImage
 
-# Register your models here.
+class ProductImageInline(admin.TabularInline):
+    model = ProductCardImage
+    extra = 1
+
+class ProductAdmin(admin.ModelAdmin):
+    inlines = [ProductImageInline]
+
+admin.site.register(ProductCard, ProductAdmin)
