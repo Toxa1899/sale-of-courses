@@ -2,6 +2,9 @@ from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from .tasks import send_activation_code, send_forgot_password_code
+from django.contrib.auth.password_validation import validate_password
+from rest_framework.validators import ValidationError
+
 
 User = get_user_model()
 
@@ -18,7 +21,13 @@ class RegisterSerializer(serializers.ModelSerializer):
         p2 = attrs.pop('password2')
 
         if p1 != p2:
-            return serializers.ValidationError('Пароли не совпадают')
+            raise serializers.ValidationError('Пароли не совпадают')
+
+        try:
+            validate_password(p1)
+        except ValidationError as e:
+            raise serializers.ValidationError({'password': list(e.messages)})
+
         return attrs
 
     def create(self, validated_data):
@@ -32,14 +41,16 @@ class ActivateSerializer(serializers.Serializer):
 
     class Meta:
         fields = ('activation_code',)
+
+
 class DeleteAccountSerializer(serializers.Serializer):
     password = serializers.CharField(min_length=6, required=True, write_only=True)
 
 
-class ChangePasswordSerializers(serializers.Serializer):
+class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(required=True)
     new_password = serializers.CharField(required=True, min_length=6)
-    new_password_confirm =serializers.CharField(required=True, min_length=6)
+    new_password_confirm = serializers.CharField(required=True, min_length=6)
 
     def validate_old_password(self, password):
         request = self.context.get('request')
@@ -48,12 +59,20 @@ class ChangePasswordSerializers(serializers.Serializer):
             raise serializers.ValidationError('Пароль не совпадает с текущим')
         return user
 
+
+
     def validate(self, attrs):
         p1 = attrs.get('new_password')
         p2 = attrs.get('new_password_confirm')
 
         if p1 != p2:
             raise serializers.ValidationError('Пароли не совпадают')
+
+        try:
+            validate_password(p1)
+        except ValidationError as e:
+            raise serializers.ValidationError({'password': list(e.messages)})
+
         return attrs
 
     def set_new_password(self):
@@ -64,13 +83,14 @@ class ChangePasswordSerializers(serializers.Serializer):
         user.save(update_fields=['password'])
 
 
-class ForgotPasswordSerializers(serializers.Serializer):
+class ForgotPasswordSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True)
 
     def validate_email(self, email):
         if not User.objects.filter(email=email).exists():
             raise serializers.ValidationError('Пользователь с такой почтой не найден ')
         return email
+
 
     def send_code(self):
         email = self.validated_data.get('email')
@@ -80,7 +100,7 @@ class ForgotPasswordSerializers(serializers.Serializer):
         send_forgot_password_code.delay(user.email, user.activation_code)
 
 
-class ForgotPasswordConfirmSerializers(serializers.Serializer):
+class ForgotPasswordConfirmSerializer(serializers.Serializer):
     code = serializers.CharField(required=True)
     new_password = serializers.CharField(required=True, min_length=6)
     new_password_confirm = serializers.CharField(required=True, min_length=6)
@@ -97,6 +117,12 @@ class ForgotPasswordConfirmSerializers(serializers.Serializer):
 
         if p1 != p2:
             raise serializers.ValidationError('Пароли не совпадают')
+
+        try:
+            validate_password(p1)
+        except ValidationError as e:
+            raise serializers.ValidationError({'password': list(e.messages)})
+
         return attrs
 
     def set_new_password(self):

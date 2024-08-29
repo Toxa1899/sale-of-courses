@@ -8,8 +8,8 @@ from django.views import View
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import RegisterSerializer, ChangePasswordSerializers, ForgotPasswordSerializers, \
-    ForgotPasswordConfirmSerializers, DeleteAccountSerializer, ActivateSerializer
+from .serializers import RegisterSerializer, ChangePasswordSerializer, ForgotPasswordSerializer, \
+    ForgotPasswordConfirmSerializer, DeleteAccountSerializer, ActivateSerializer
 from django.contrib.auth import get_user_model
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -18,13 +18,11 @@ from rest_framework_simplejwt.tokens import RefreshToken
 User = get_user_model()
 
 
-
-
 class RegisterAPIView(APIView):
     def post(self, request):
-        serializers = RegisterSerializer(data=request.data)
-        serializers.is_valid(raise_exception=True)
-        serializers.save()
+        serializer = RegisterSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
         return Response('Вы успешно зарегистрировались вам отправлено письмо на почту', status=201)
 
 
@@ -50,27 +48,30 @@ class ActivateAPIView(APIView):
 
 class ChangePasswordAPIView(APIView):
     permission_classes = [IsAuthenticated]
-
     def post(self, request):
-        serializers = ChangePasswordSerializers(data=request.data, context={'request': request})
-        serializers.is_valid(raise_exception=True)
-        serializers.is_valid()
+        serializer = ChangePasswordSerializer(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        serializer.set_new_password()
         return Response('Вы успешно сменили пароль', status=200)
 
 
 class ForgotPasswordAPIView(APIView):
-
     def post(self, request):
-        serializer = ForgotPasswordSerializers(data=request.data)
+        serializer = ForgotPasswordSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.send_code()
-        return Response('Вам отправлено на эту почту письмо с кодом для восстановления пароля', status=200)
+        return Response('Вам отправлено письмо на почту с кодом для восстановления пароля', status=200)
 
 
 class ForgotPasswordConfirmAPIView(APIView):
-
     def post(self, request):
-        serializer = ForgotPasswordConfirmSerializers(data=request.data)
+        serializer = ForgotPasswordConfirmSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.set_new_password()
         return Response('Ваш пароль успешно обновлен', status=200)
+
+
+class UpdateUserAPIView(APIView):
+    def post(self, request):
+        # serializer = UpdateUserSerializers()
+        ...
