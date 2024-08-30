@@ -7,11 +7,27 @@ from drf_yasg import openapi
 
 
 
+
+
+
+
+schema_view = get_schema_view(
+   openapi.Info(
+      title="WIT digital recorder",
+      default_version='v1',
+
+
+   ),
+   public=True,
+)
+
+
 urlpatterns = [
     path('api/v1/account/', include('applications.account.urls')),
     path('api/v1/card/', include('applications.product_card.urls')),
     path('api/v1/course/', include('applications.courses.urls')),
     path('admin/', admin.site.urls),
+    path('swagger/', schema_view.with_ui('swagger')),
 ]
 
 
