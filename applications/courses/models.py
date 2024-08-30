@@ -16,5 +16,6 @@ class Course(models.Model):
     lesson_description = models.TextField()
     video = models.FileField(upload_to='course/videos', null=True, blank=True)
     file = models.FileField(upload_to='course/files', null=True, blank=True)
+    is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
