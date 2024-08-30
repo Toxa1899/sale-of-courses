@@ -24,6 +24,7 @@ class CourseSerializer(serializers.ModelSerializer):
         user = self.context['request'].user
         obj_id = self.context['view'].kwargs.get('pk')
         product_card_exists = ProductCard.objects.filter(user=user, id=obj_id).exists()
+
         if not product_card_exists:
             raise serializers.ValidationError('вы не являетесь создателем данного курса')
 

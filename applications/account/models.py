@@ -35,11 +35,13 @@ class CustomUserManager(UserManager):
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True, verbose_name="email")
     photo = models.ImageField(upload_to="users/", blank=True, null=True, verbose_name="users")
-    description = models.TextField(blank=True, null=True, verbose_name="description")
-    link_to_portfolio = models.URLField(blank=True, null=True, verbose_name="link to portfolio")
-    link_to_behance = models.URLField(blank=True, null=True, verbose_name="link to behance")
-    link_to_instagram = models.URLField(blank=True, null=True, verbose_name="link to instagram")
-    link_to_artstation = models.URLField(blank=True, null=True, verbose_name="link to artstation")
+    description = models.TextField(blank=True, null=True, verbose_name="Описание")
+    link_to_portfolio = models.URLField(blank=True, null=True, verbose_name="ссылка на портфолио")
+    link_to_behance = models.URLField(blank=True, null=True, verbose_name="ссылка  на behance")
+    link_to_instagram = models.URLField(blank=True, null=True, verbose_name="ссылка на  instagram")
+    link_to_artstation = models.URLField(blank=True, null=True, verbose_name="ссылка на  artstation")
+    rub = models.DecimalField(default=0, verbose_name="Сумма на счету в рублях", decimal_places=2,
+                              max_digits=50,)
     activation_code = models.CharField(max_length=60, blank=True)
     username = None
     is_active = models.BooleanField(default=False)
