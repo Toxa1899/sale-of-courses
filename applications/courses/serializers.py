@@ -13,15 +13,28 @@ class CourseSerializer(serializers.ModelSerializer):
         request = self.context['request']
         user = request.user
         validated_data['user'] = user
-
         product_card_id = validated_data.get('product_card')
-        print('----------')
-        print(product_card_id)
-
         product_card_exists = ProductCard.objects.filter(user=user, id=product_card_id.id).exists()
-
         if not product_card_exists:
             raise serializers.ValidationError('Вы не можете создать курс по данной карточке')
-
-        # Если карточка продукта существует, создаем и возвращаем объект Course
         return Course.objects.create(**validated_data)
+
+
+    def update(self, instance, validated_data):
+        user = self.context['request'].user
+        obj_id = self.context['view'].kwargs.get('pk')
+        product_card_exists = ProductCard.objects.filter(user=user, id=obj_id).exists()
+        if not product_card_exists:
+            raise serializers.ValidationError('вы не являетесь создателем данного курса')
+
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        return instance
+
+
+        # def update(self, instance, validated_data):
+        #     for attr, value in validated_data.items():
+        #         setattr(instance, attr, value)
+        #     instance.save()
+        #     return instance
