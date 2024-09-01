@@ -20,6 +20,11 @@ class CourseSerializer(serializers.ModelSerializer):
         return Course.objects.create(**validated_data)
 
 
+
+
+
+
+
     def update(self, instance, validated_data):
         user = self.context['request'].user
         obj_id = self.context['view'].kwargs.get('pk')
