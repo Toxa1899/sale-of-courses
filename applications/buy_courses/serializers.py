@@ -20,15 +20,22 @@ class BuyCourseSerializer(serializers.ModelSerializer):
 
         product_card = validated_data['product_card']
         product_card_price = product_card.price
-        print(product_card_price)
+
+
         if int(user.rub) < int(product_card_price):
             raise serializers.ValidationError('Недостаточно средств на балансе ')
+
+        if ProductCard.objects.filter(user=user).exists():
+            raise serializers.ValidationError("Вы не можете приобрести собственный курс")
+
+        if BuyCourse.objects.filter(user=user).exists():
+            raise serializers.ValidationError('Вы уже приобрели данный курс')
+
 
         user.rub -= product_card_price
         user.save()
 
-        # if user:
-        #     raise serializers.ValidationError('Ошибка')
+
         buy_course = BuyCourse.objects.create(**validated_data)
         return buy_course
 
