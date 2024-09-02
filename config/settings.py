@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'applications.product_card',
     'applications.courses',
     'applications.buy_courses',
+    'applications.balance',
 
 
     # libraries
