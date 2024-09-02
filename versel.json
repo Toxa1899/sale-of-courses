@@ -1,5 +1,3 @@
-# versel.json
-
 {
   "version": 2,
   "builds": [
@@ -25,6 +23,5 @@
       "src": "/(.*)",
       "dest": "config/wsgi.py"
     }
-  ],
-  "outputDirectory": "staticfiles"
+  ]
 }
