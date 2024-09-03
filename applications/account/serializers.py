@@ -141,3 +141,9 @@ class UpdateUserSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
+
+class UserGetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+
+        exclude = ['password', 'activation_code']

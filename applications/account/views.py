@@ -8,8 +8,10 @@ from django.views import View
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+from .models import CustomUser
 from .serializers import RegisterSerializer, ChangePasswordSerializer, ForgotPasswordSerializer, \
-    ForgotPasswordConfirmSerializer, ActivateSerializer, UpdateUserSerializer
+    ForgotPasswordConfirmSerializer, ActivateSerializer, UpdateUserSerializer, UserGetSerializer
 from django.contrib.auth import get_user_model
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -86,3 +88,12 @@ class UpdateUserAPIView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class UserGetAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        user = CustomUser.objects.filter(id=request.user.id)
+        serializer = UserGetSerializer(user, many=True)
+
+        return Response(serializer.data, status=204)

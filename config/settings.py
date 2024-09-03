@@ -32,6 +32,10 @@ DEBUG = True
 ALLOWED_HOSTS = ["*"]
 
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://0ba7-185-53-230-232.ngrok-free.app',
+]
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -42,7 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'whitenoise.runserver_nostatic',
+
 
     # apps
      'applications.account',
@@ -62,7 +66,6 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.cache.UpdateCacheMiddleware',
@@ -72,7 +75,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -164,14 +166,18 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'account.CustomUser'
 
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000'
-]
+# CORS_ALLOWED_ORIGINS = [
+#     'http://localhost:3000'
+# ]
+
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 
 CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
 CELERY_BROKER_TRANSPORT = 'redis'
 
+APPEND_SLASH = False
 
 
 
