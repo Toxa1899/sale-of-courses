@@ -94,6 +94,5 @@ class UserGetAPIView(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request):
         user = CustomUser.objects.filter(id=request.user.id)
-        serializer = UserGetSerializer(user, many=True)
-
-        return Response(serializer.data, status=204)
+        serializer = UserGetSerializer(user)
+        return Response(serializer.data, status=202)
