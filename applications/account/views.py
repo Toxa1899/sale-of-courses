@@ -93,6 +93,6 @@ class UpdateUserAPIView(APIView):
 class UserGetAPIView(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request):
-        user = CustomUser.objects.filter(id=request.user.id)
+        user = CustomUser.objects.filter(id=request.user.id).first()
         serializer = UserGetSerializer(user)
         return Response(serializer.data, status=202)

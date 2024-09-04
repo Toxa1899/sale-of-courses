@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>File Upload Example</title>
+</head>
+<body>
+
+<div>
+    <input type="file" id="fileInput" />
+    <button onclick="uploadFile()">Upload</button>
+</div>
+
+<script>
+    function uploadFile() {
+        const fileInput = document.getElementById('fileInput');
+        const file = fileInput.files[0];
+        if (!file) {
+            alert('Please select a file to upload.');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('photo', file);
+        fetch('http://95.163.230.217/api/v1/account/update_user/', {
+            method: 'PATCH',
+            body: formData,
+            headers: {
+
+                'Authorization': 'Bearer ' // Добавьте токен авторизации, если требуется
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Success:', data);
+            alert('File uploaded successfully!');
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            alert('Failed to upload file.');
+        });
+    }
+</script>
+
+</body>
+</html>

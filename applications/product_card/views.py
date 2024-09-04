@@ -46,6 +46,12 @@ class ProductViewSet(viewsets.ModelViewSet):
         self.perform_destroy(instance)
         return Response(status=204)
 
+    @action(detail=False, methods=['GET'], permission_classes=[IsAuthenticated])
+    def my(self, request):
+        user = request.user
+        product_card = ProductCard.objects.filter(user=user)
+        serializer = ProductCardSerializer(product_card, many=True)
+        return Response(serializer.data)
 
 class ProductImageViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
