@@ -1,3 +1,4 @@
+from django.db.models import Q
 from rest_framework import viewsets, permissions
 from .models import ProductCard, ProductCardImage
 from .serializers import ProductCardSerializer, ProductCardImageSerializer
@@ -16,6 +17,15 @@ class ProductViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
     queryset = ProductCard.objects.all()
     serializer_class = ProductCardSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_authenticated:
+            return ProductCard.objects.filter(Q(is_active=True) | Q(user=user))
+        else:
+            return ProductCard.objects.filter(is_active=True)
+
+
 
     def retrieve(self, request, *args, **kwargs):
         user = request.user

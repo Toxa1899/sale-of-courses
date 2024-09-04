@@ -20,7 +20,7 @@ class ProductCardSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProductCard
-        fields = ('id', 'name', 'authors_work', 'images_data', 'price', 'cap', 'description')
+        fields = ('id', 'name', 'authors_work', 'images_data', 'price', 'cap', 'description', 'is_active')
 
 
     def create(self, validated_data):
