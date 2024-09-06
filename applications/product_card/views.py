@@ -11,7 +11,7 @@ from rest_framework.exceptions import PermissionDenied
 from ..buy_courses.models import BuyCourse
 from ..courses.models import Course
 from ..courses.serializers import CourseSerializer
-
+from django.db.models import Count, F, FloatField, ExpressionWrapper
 
 class ProductViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -59,7 +59,9 @@ class ProductViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['GET'], permission_classes=[IsAuthenticated])
     def my(self, request):
         user = request.user
-        product_card = ProductCard.objects.filter(user=user)
+        product_card = ProductCard.objects.filter(user=user).annotate(sales=Count('product_card_buy_courses'),
+        money_sales= ExpressionWrapper(F('price') * F('sales'), output_field=FloatField()))
+
         serializer = ProductCardSerializer(product_card, many=True)
         return Response(serializer.data)
 

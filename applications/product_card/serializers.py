@@ -9,7 +9,12 @@ class ProductCardImageSerializer(serializers.ModelSerializer):
 
 
 
+
+
+
 class ProductCardSerializer(serializers.ModelSerializer):
+
+
     authors_work = serializers.ListField(
         child=serializers.ImageField(),
         write_only=True,
@@ -18,10 +23,20 @@ class ProductCardSerializer(serializers.ModelSerializer):
 
     images_data = ProductCardImageSerializer(many=True, read_only=True, source='productcardimage_set')
 
+    sales = serializers.SerializerMethodField()
+    money_sales = serializers.SerializerMethodField()
+
+
     class Meta:
         model = ProductCard
-        fields = ('id', 'name', 'authors_work', 'images_data', 'price', 'cap', 'description', 'is_active')
+        fields = ('id', 'name', 'authors_work', 'images_data', 'price', 'cap', 'description', 'is_active', 'sales', 'money_sales')
 
+
+    def get_sales(self, obj):
+        return obj.sales
+
+    def get_money_sales(self, obj):
+        return obj.money_sales
 
     def create(self, validated_data):
         request = self.context.get('request')
@@ -31,5 +46,4 @@ class ProductCardSerializer(serializers.ModelSerializer):
         product = super().create(validated_data)
         for image in images:
             ProductCardImage.objects.create(product=product, authors_work=image)
-
         return product

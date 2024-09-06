@@ -9,5 +9,6 @@ User = get_user_model()
 
 class BuyCourse(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_buy_courses')
-    product_card = models.ForeignKey(ProductCard, on_delete=models.CASCADE, verbose_name='карточка курса')
+    product_card = models.ForeignKey(ProductCard, on_delete=models.CASCADE, verbose_name='карточка курса',
+                                     related_name='product_card_buy_courses')
 
