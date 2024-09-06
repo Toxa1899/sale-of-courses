@@ -60,7 +60,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     def my(self, request):
         user = request.user
         product_card = ProductCard.objects.filter(user=user).annotate(sales=Count('product_card_buy_courses'),
-        money_sales= ExpressionWrapper(F('price') * F('sales'), output_field=FloatField()))
+        money_sales=ExpressionWrapper(F('price') * F('sales'), output_field=FloatField()))
 
         serializer = ProductCardSerializer(product_card, many=True)
         return Response(serializer.data)
